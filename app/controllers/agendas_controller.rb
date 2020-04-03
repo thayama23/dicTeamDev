@@ -1,5 +1,5 @@
 class AgendasController < ApplicationController
-  # before_action :set_agenda, only: %i[show edit update destroy]
+  # before_action :set_agenda, only: %i[destroy]
 
   def index
     @agendas = Agenda.all
@@ -18,6 +18,22 @@ class AgendasController < ApplicationController
       redirect_to dashboard_url, notice: I18n.t('views.messages.create_agenda') 
     else
       render :new
+    end
+  end
+
+  def destroy
+    @agenda = Agenda.find(params[:id])
+    @users = @agenda.team.users #user 全員
+
+    if current_user.id ==  @agenda.user_id || @agenda.team.owner_id
+      @agenda.destroy
+
+      @users.each do |user|
+        ContactMailer.contact_mail(user.email, @agenda.title).deliver
+      end
+      redirect_to dashboard_url, notice: 'Agenda is deleted.'
+    else
+      render dashboard_url, notice: 'You are not authorized to perform such task.'
     end
   end
 
