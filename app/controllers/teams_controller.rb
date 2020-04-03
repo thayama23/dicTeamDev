@@ -41,7 +41,6 @@ class TeamsController < ApplicationController
   def destroy
     @user = Team.find(params[:id])
     @team = @user.team
-    binding.irb
 
     if current_user.id = @user.user_id || @team.owner_id
       @team.destroy
