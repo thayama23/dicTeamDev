@@ -1,4 +1,4 @@
 class Assign < ApplicationRecord
-  belongs_to :user
-  belongs_to :team
+  belongs_to :user, optional: true
+  belongs_to :team, optional: true
 end

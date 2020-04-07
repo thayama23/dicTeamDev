@@ -1,6 +1,25 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_team, only: %i[show edit update destroy　switch_owner]
+  before_action :set_team, only: %i[show edit update destroy]
+
+  def switch_owner
+    @team = Team.friendly.find(params[:id])
+    if current_user.id == @team.owner_id
+      # binding.irb
+      @team.owner_id = params[:owner_id]
+      puts "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"
+      puts params[:owner_id]
+      if @team.update(team_params)
+        # SwichOwnerMailer.switch_owner_mail(@team).deliver
+        puts "eeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        redirect_to team_url, notice: "リーダー権限の移動をしました。"
+      else
+        redirect_to team_url, notice: "リーダー権限の移動に失敗しました。"
+      end
+    else
+      "あなたにその権限はありません。"
+    end
+  end
 
   def index
     @teams = Team.all
@@ -20,6 +39,8 @@ class TeamsController < ApplicationController
   def create
     @team = Team.new(team_params)
     @team.owner = current_user
+
+    # binding.irb
     if @team.save
       @team.invite_member(@team.owner)
       redirect_to @team, notice: I18n.t('views.messages.create_team')
@@ -39,14 +60,7 @@ class TeamsController < ApplicationController
   end
 
 
-  def switch_owner
-    if @team.update(owner_id: params[:owner_id])
-      ContactMailer.switch_owner_mail(@team).deliver
-      redirect_to team_url, notice: 'リーダー権限の移動をしました。'
-    else
-      redirect_to team_url, notice: 'リーダー権限の移動に失敗しました。'
-    end
-  end
+
 
 
 

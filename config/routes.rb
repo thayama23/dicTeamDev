@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   }
   resource :user
   
+  # post 'teams/:id/change', to: 'teams#switch_owner', as: 'switch_owner'
   resources :teams do
+    member do
+      patch :switch_owner
+    end
     resources :assigns, only: %w(create destroy)
     resources :agendas, shallow: true do
       resources :articles do
