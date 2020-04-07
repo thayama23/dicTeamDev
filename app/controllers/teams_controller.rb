@@ -30,7 +30,7 @@ class TeamsController < ApplicationController
   end
 
   def update
-    # if current_user == team.owner
+    if current_user.id == @team.owner_id
 
       if @team.update(team_params)
         redirect_to @team, notice: I18n.t('views.messages.update_team')
@@ -38,9 +38,9 @@ class TeamsController < ApplicationController
         flash.now[:error] = I18n.t('views.messages.failed_to_save_team')
         render :edit
       end
-    # else 
-    #   redirect_to @team, notice: 'You are not authorized to perform such task.'
-    # end 
+    else 
+      redirect_to @team, notice: 'You are not authorized to perform such task.'
+    end 
   end
 
   def destroy
