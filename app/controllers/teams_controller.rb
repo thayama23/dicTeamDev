@@ -4,14 +4,13 @@ class TeamsController < ApplicationController
 
   def switch_owner
     @team = Team.friendly.find(params[:id])
+    @assign = Assign.find(params[:assign])
     if current_user.id == @team.owner_id
       # binding.irb
-      @team.owner_id = params[:owner_id]
-      puts "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"
-      puts params[:owner_id]
-      if @team.update(team_params)
-        # SwichOwnerMailer.switch_owner_mail(@team).deliver
-        puts "eeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      
+      if @team.update(owner_id: @assign.user.id)
+        SwitchOwnerMailer.switch_owner_mail(@team).deliver
+        
         redirect_to team_url, notice: "リーダー権限の移動をしました。"
       else
         redirect_to team_url, notice: "リーダー権限の移動に失敗しました。"

@@ -1,4 +1,4 @@
-class SwichOwnerMailer < ApplicationMailer
+class SwitchOwnerMailer < ApplicationMailer
   def switch_owner_mail(team)
     @team = team
     mail to: @team.owner.email, subject: 'Teamオーナー変更の通知'
