@@ -39,8 +39,15 @@ class TeamsController < ApplicationController
   end
 
   def destroy
-    @team.destroy
-    redirect_to teams_url, notice: I18n.t('views.messages.delete_team')
+    @user = Team.find(params[:id])
+    @team = @user.team
+
+    if current_user.id = @user.user_id || @team.owner_id
+      @team.destroy
+      redirect_to teams_url, notice: I18n.t('views.messages.delete_team')
+    else
+      render_to teams_url, notice: "You are not authorized to perform such task."
+    end 
   end
 
   def dashboard
