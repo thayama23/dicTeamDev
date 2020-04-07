@@ -30,12 +30,17 @@ class TeamsController < ApplicationController
   end
 
   def update
-    if @team.update(team_params)
-      redirect_to @team, notice: I18n.t('views.messages.update_team')
-    else
-      flash.now[:error] = I18n.t('views.messages.failed_to_save_team')
-      render :edit
-    end
+    # if current_user == team.owner
+
+      if @team.update(team_params)
+        redirect_to @team, notice: I18n.t('views.messages.update_team')
+      else
+        flash.now[:error] = I18n.t('views.messages.failed_to_save_team')
+        render :edit
+      end
+    # else 
+    #   redirect_to @team, notice: 'You are not authorized to perform such task.'
+    # end 
   end
 
   def destroy
@@ -49,6 +54,11 @@ class TeamsController < ApplicationController
       render_to teams_url, notice: "You are not authorized to perform such task."
     end 
   end
+
+  def owner_changes
+
+  end
+
 
   def dashboard
     @team = current_user.keep_team_id ? Team.find(current_user.keep_team_id) : current_user.teams.first
