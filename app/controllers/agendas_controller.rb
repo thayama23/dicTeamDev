@@ -25,7 +25,7 @@ class AgendasController < ApplicationController
     @agenda = Agenda.find(params[:id])
     @users = @agenda.team.users #user 全員
 
-    if current_user.id ==  @agenda.user_id || @agenda.team.owner_id
+    if current_user.id ==  @agenda.user_id || current_user.id == @agenda.team.owner_id
       @agenda.destroy
 
       @users.each do |user|
@@ -33,7 +33,7 @@ class AgendasController < ApplicationController
       end
       redirect_to dashboard_url, notice: 'Agenda is deleted.'
     else
-      render dashboard_url, notice: 'You are not authorized to perform such task.'
+      redirect_to dashboard_url, notice: 'You are not authorized to perform such task.'
     end
   end
 
