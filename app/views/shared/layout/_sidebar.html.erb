@@ -33,8 +33,9 @@
             <a href="#" class="nav-link">
               <i class="fa fa-circle-o nav-icon"></i>
               <p>
-                <%= agenda.title %>
+                <%= agenda.title  %>
                 <i class="right fa fa-angle-left"></i>
+                <object> <%= link_to 'Destroy', agenda_path(agenda.id), class: "btn btn-danger", method: :delete, data: { confirm: 'Are you sure?' } %>　</object>
               </p>
             </a>
             <ul class="nav nav-treeview" style="display: block;">
